@@ -1,5 +1,5 @@
 runtime: nodejs20
-service: fe-6-vite
+service: fe-7-vite
 handlers:
   # Serve all static files with url ending with a file extension
   - url: /(.*\..+)$
