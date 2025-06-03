@@ -7,15 +7,14 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from "./components/ui/drawer";
-import { Button } from "./components/ui/button";
+} from "../components/ui/drawer";
+import { Button } from "../components/ui/button";
 import { Loader2, Pencil } from "lucide-react";
 import { useState } from "react";
-import axios from "axios";
-import { BASE_URL } from "./utils";
-import { Label } from "./components/ui/label";
-import { RadioGroup, RadioGroupItem } from "./components/ui/radio-group";
-import { Input } from "./components/ui/input";
+import { Label } from "../components/ui/label";
+import { RadioGroup, RadioGroupItem } from "../components/ui/radio-group";
+import { Input } from "../components/ui/input";
+import { strictInstance } from "@/api/instance";
 
 const EditUser = ({ setIsGet, user }: any) => {
   const defaultValue = {
@@ -32,7 +31,7 @@ const EditUser = ({ setIsGet, user }: any) => {
     try {
       if (JSON.stringify(defaultValue) !== JSON.stringify(users)) {
         setIsLoading(true);
-        await axios.put(`${BASE_URL}/users/${user.id}`, users);
+        await strictInstance.put(`/users/${user.id}`, users);
         setIsGet((prev: boolean) => !prev);
       }
       setIsOpen(false);

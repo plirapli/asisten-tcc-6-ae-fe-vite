@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button } from "./components/ui/button";
+import { Button } from "../components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -9,10 +9,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "./components/ui/dialog";
-import axios from "axios";
-import { BASE_URL } from "./utils";
+} from "../components/ui/dialog";
 import { Loader2, Trash2 } from "lucide-react";
+import { strictInstance } from "@/api/instance";
 
 const DeleteUser = ({ setIsGet, user }: any) => {
   const [open, setOpen] = useState(false);
@@ -22,7 +21,7 @@ const DeleteUser = ({ setIsGet, user }: any) => {
     e.preventDefault();
     try {
       setIsLoading(true);
-      await axios.delete(`${BASE_URL}/users/${user.id}`);
+      await strictInstance.delete(`/users/${user.id}`);
       setOpen(false);
       setIsGet((prev: boolean) => !prev);
     } catch (error: any) {

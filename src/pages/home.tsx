@@ -6,18 +6,20 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "./components/ui/table";
-import axios from "axios";
-import { BASE_URL } from "./utils";
-import AddUser from "./add-user";
+} from "../components/ui/table";
 import DeleteUser from "./delete-user";
 import EditUser from "./edit-user";
-import { Skeleton } from "./components/ui/skeleton";
+import { Skeleton } from "../components/ui/skeleton";
+import { strictInstance } from "@/api/instance";
+import { Button } from "@/components/ui/button";
+import { LogOutIcon } from "lucide-react";
+import { useNavigate } from "react-router";
 
-const App = () => {
+const HomePage = () => {
   const [users, setUsers] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isGet, setIsGet] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     getUsers();
@@ -26,21 +28,35 @@ const App = () => {
   const getUsers = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.get(`${BASE_URL}/users`);
+      const response = await strictInstance.get("/users");
       setUsers(response.data.data);
     } catch (error: any) {
-      console.log(error.message);
+      return <div>Error: {error.message}</div>;
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const logoutHandler = async () => {
+    try {
+      setIsLoading(true);
+      await strictInstance.delete("/logout");
+      localStorage.removeItem("accessToken");
+    } catch (error: any) {
+      console.error(error?.response?.data || error.message);
+    } finally {
+      setIsLoading(false);
+      navigate("/login");
     }
   };
 
   return (
     <div className="flex justify-center">
       <div className="w-full max-w-xl p-5">
-        <div className="flex items-center mb-2">
-          <div className="w-full font-bold">Daftar User</div>
-          <AddUser setIsGet={setIsGet} />
+        <div className="mb-2">
+          <Button onClick={logoutHandler} className="cursor-pointer">
+            <LogOutIcon /> Logout
+          </Button>
         </div>
         <Table>
           <TableHeader>
@@ -95,4 +111,4 @@ const User = ({ setIsGet, users }: any) => {
   ));
 };
 
-export default App;
+export default HomePage;
